@@ -1,0 +1,118 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+
+msgid "Gathering stats from VKontakte groups."
+msgstr "Сбор статистики с групп ВКонтакте."
+
+msgid "group in which the program will gather stats"
+msgstr "группа, в которой программа будет собирать статистику"
+
+msgid "check for updates"
+msgstr "проверить наличие обновлений"
+
+msgid "specify stats mode"
+msgstr "выбрать режим сбора статистики"
+
+msgid "specify export type"
+msgstr "выбрать тип экспорта"
+
+msgid "get access to vk.com"
+msgstr "получить доступ к ВКонтакте"
+
+msgid "set number of posts to scan"
+msgstr "задать количество постов для сканирования"
+
+msgid "the earliest date of post in yyyy/mm/dd format"
+msgstr "дата самого раннего поста в формате гггг/мм/дд"
+
+msgid "verbose output"
+msgstr "подробный вывод"
+
+msgid "Creating temporary directory..."
+msgstr "Создаю временную папку..."
+
+msgid "Downloading new version..."
+msgstr "Скачиваю новую версию..."
+
+msgid "Unpacking archive..."
+msgstr "Распаковываю архив..."
+
+msgid "Exiting..."
+msgstr "Завершаю работу приложения..."
+
+msgid "Found update to version {}!\n\nChangelog:"
+msgstr "Найдено обновление до версии {}!\n\nСписок изменений:"
+
+msgid "\nUpgrade? (Y/n)"
+msgstr "\nОбновиться? (Д/н)"
+
+msgid "Passing update...\n"
+msgstr "Ладно, хрен с ней, обновкой...\n"
+
+msgid "You running latest version\n"
+msgstr "Вы используете последнюю версию\n"
+
+msgid "If you're afraid of losing an account, then:\n\t1) Go to http://vk.cc/3T1J9A\n\t2) Login and give permissions to app\n\t3) Copy part of urlbar, which is containing access_token\n\t4) Create file 'token.txt' and write to one your access token"
+msgstr "Если боитесь потерять акаунт, то:\n\t1) Пройдите по http://vk.cc/3T1J9A\n\t2) Залогиньтесь и дайте разрешения приложению\n\t3) Скопируйте часть адресной строки, которая содержит access_token\n\t4) Создайте файл 'token.txt' и запишите в него ваш access_token"
+
+msgid "Your login: "
+msgstr "Ваш логин: "
+
+msgid "Your password: "
+msgstr "Ваш пароль: "
+
+msgid "[{}%] post https://vk.com/wall{}_{}:\n\tfrom: https://vk.com/id{}\n\tlikes: {}\n\tdate (yyyy/mm/dd): {}"
+msgstr "[{}%] пост https://vk.com/wall{}_{}:\n\tот: https://vk.com/id{}\n\tлайки: {}\n\tдата (гггг/мм/дд): {}"
+
+msgid "[{}%] post https://vk.com/wall{}_{} :\n\tlikes: {}\n\tlikers: {}"
+msgstr "[{}%] пост https://vk.com/wall{}_{} :\n\tлайки: {}\n\tлайкеры: {}"
+
+msgid "limited to {} posts"
+msgstr "ограничено до {} постов"
+
+msgid "limited to {} date"
+msgstr "ограничено до даты {}"
+
+msgid "[{}%] user {}:\n\tposts: {}\n\tURL: https://vk.com/{screen_name}\n\tname: {first_name} {last_name}"
+msgstr "[{}%] пользователь {}:\n\tпосты: {}\n\tURL: https://vk.com/{screen_name}\n\tимя: {first_name} {last_name}"
+
+msgid "[{}%] user {}:\n\tlikes: {}\n\tURL: https://vk.com/{screen_name}\n\tname: {first_name} {last_name}"
+msgstr "[{}%] пользователь {}:\n\tлайки: {}\n\tURL: https://vk.com/{screen_name}\n\tимя: {first_name} {last_name}"
+
+msgid "Incorrect date!"
+msgstr "Неправильная дата!"
+
+msgid "Exporting to {}"
+msgstr "Экспорт в {}"
+
+msgid "STATISTICS FOR POSTS"
+msgstr "СТАТИСТИКА ПО ПОСТАМ"
+
+msgid "STATISTICS FOR LIKES"
+msgstr "СТАТИСТИКА ПО ЛАЙКАМ"
+
+msgid "STATISTICS FOR LIKERS"
+msgstr "СТАТИСТИКА ПО ЛАЙКЕРАМ"
+
+msgid "Wrote: {}"
+msgstr "Записано: {}"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Posts"
+msgstr "Посты"
+
+msgid "Likes"
+msgstr "Лайки"
+
+msgid "STATISTICS MODE: {}"
+msgstr "РЕЖИМ СТАТИСТИКИ: {}"
+
+msgid "STARTED GATHERING STATS FROM '{}'"
+msgstr "НАЧАТ СБОР СТАТИСТИКИ С '{}'"
+
+msgid "SUCCESSFUL!"
+msgstr "УСПЕШНО!"
