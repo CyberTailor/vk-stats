@@ -41,3 +41,7 @@ Get access to VKontakte.
 
 ###--verbose
 Verbose output.
+
+##Used libraries
+* [vk_api_auth](https://github.com/dzhioev/vk_api_auth)
+* [gettext_windows](https://launchpad.net/gettext-py-windows)
