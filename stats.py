@@ -94,7 +94,7 @@ def upgrade(version):
     os.mkdir(tmpdir)
     print(_("Downloading new version..."))
     archive_file = "{}/VK_Stats.zip".format(tmpdir)
-    request.urlretrieve("https://github.com/CyberTailor/vk_stats/releases/download/{0}/Stats-{0}.zip".format(version),
+    request.urlretrieve("https://github.com/CyberTailor/vk-stats/releases/download/{0}/Stats-{0}.zip".format(version),
                         filename=archive_file)
     print(_("Unpacking archive..."))
     archive = zipfile.ZipFile(archive_file)
