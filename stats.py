@@ -256,8 +256,9 @@ class Stats:
             posts.extend(self._get_posts_pack(offset=offset, count=1000))
             offset += 1000
         for post in range(hundreds_range):
-            if self._check_limit(posts[-1]):
-                return posts
+            if offset > 0:
+                if self._check_limit(posts[-1]):
+                    return posts
             cur_progress = percents(offset, limit_list)
             if cur_progress > progress:
                 progress = cur_progress
