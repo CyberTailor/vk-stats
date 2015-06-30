@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # coding=utf-8
-# sorry_for_my=english
 
 #   Copyright 2015 Matvey Vyalkov
 #
@@ -32,6 +31,7 @@ import tempfile
 import zipfile
 import json
 import gettext
+import locale
 import time
 import urllib.error
 import socket
@@ -39,24 +39,19 @@ from getpass import getpass
 from urllib import request
 from urllib.parse import urlencode
 
-from vk_api_auth.vk_auth import auth
-from gettext_windows import gettext_windows
+from libs.vk_api_auth.vk_auth import auth
+from libs.gettext_windows import gettext_windows
 
-scriptdir = os.path.abspath(os.path.dirname(__file__))  # directory with this script
+console = True
+SCRIPTDIR = os.path.abspath(os.path.dirname(__file__))  # directory with this script
+LOCALE_DIR = "{}/locale".format(SCRIPTDIR)
+APP = "vk_stats"
 # translating strings in _()
 lang = gettext_windows.get_language()
-translation = gettext.translation("vk_stats", localedir="{}/locale".format(scriptdir), languages=lang)
+locale.setlocale(locale.LC_ALL, "")
+locale.bindtextdomain(APP, LOCALE_DIR)
+translation = gettext.translation(APP, localedir=LOCALE_DIR, languages=lang)
 _ = translation.gettext
-
-
-def log_write(message, *, to=sys.stdout):
-    """
-    Writing time and message to standard stream
-    :param to: sys.stdout or sys.stderr
-    :param message: any object
-    """
-    current_time = time.strftime("%H:%M:%S")
-    print("{}: {}".format(current_time, message), file=to)
 
 
 def parse_cmd_args():
@@ -71,8 +66,6 @@ def parse_cmd_args():
                         help=_("check for updates"))
     parser.add_argument("--mode", default="posts", choices=["posts", "likers", "liked"],
                         help=_("specify a mode of stats [posts]"))
-    parser.add_argument("--export", default="csv", choices=["csv", "txt", "all"],
-                        help=_("specify a type of export [CSV]"))
     parser.add_argument("--login", action="store_true",
                         help=_("get access to the VK"))
     parser.add_argument("--posts", type=int, default=0,
@@ -80,6 +73,24 @@ def parse_cmd_args():
     parser.add_argument("--date", default="0/0/0",
                         help=_("the earliest date of post in the yyyy/mm/dd format [0/0/0]"))
     return vars(parser.parse_args())
+
+
+def no_console():
+    """
+    Preparing the program for GUI.
+    """
+    global console
+    console = False
+
+
+def log_write(message, *, to=sys.stdout):
+    """
+    Writing time and message to standard stream.
+    :param to: sys.stdout or sys.stderr
+    :param message: any object
+    """
+    current_time = time.strftime("%H:%M:%S")
+    print("{}: {}".format(current_time, message), file=to)
 
 
 def upgrade(version):
@@ -96,7 +107,7 @@ def upgrade(version):
                         filename=archive_file)
     log_write(_("Unpacking an archive..."))
     archive = zipfile.ZipFile(archive_file)
-    archive.extractall(path=scriptdir)  # extract ZIP to script directory
+    archive.extractall(path=SCRIPTDIR)  # extract ZIP to script directory
     log_write(_("Exiting..."))
     exit()
 
@@ -136,7 +147,7 @@ def login():
     password = getpass(_("Your password: "))
     app_id = 4589594
     token = auth(email, password, app_id, ["stats", "groups", "wall"])[0]
-    token_file = open("{}/token.txt".format(scriptdir), mode="w")
+    token_file = open("{}/token.txt".format(SCRIPTDIR), mode="w")
     token_file.write(token)
     return token
 
@@ -163,14 +174,13 @@ def call_api(method, *, token, params):
             log_write(_("Error: {}. Waiting for 10 seconds...").format(err))
             time.sleep(10)
     if "error" in result:
-        log_write("VK API: {}".format(result["error"]["error_msg"]), to=sys.stderr)
-        exit()
+        if console:
+            log_write("VK API: {}".format(result["error"]["error_msg"]), to=sys.stderr)
+            exit()
+        else:
+            return "VK API: {}".format(result["error"]["error_msg"])
     time.sleep(0.33)
     return result["response"]
-
-
-def _compare_by_first(sequence):
-    return sequence[0]
 
 
 def percents(el, seq):
@@ -188,13 +198,26 @@ class Stats:
     Gathering statistics
     """
 
-    def __init__(self, wall_id, owner_screen_name, *, token, posts_lim=0, date_lim="0/0/0",
-                 export="csv", wall_filter="others"):
-        self.wall = wall_id
+    def __init__(self, owner_screen_name, *, token, posts_lim=0, date_lim="0/0/0", wall_filter="others"):
         self.token = token
-        self.export = export
         self.screen_name = owner_screen_name
         self.filter = wall_filter
+
+        # ID of a wall
+        owner_wall_data = call_api("utils.resolveScreenName", params={"screen_name": self.screen_name},
+                                   token=access_token)
+        owner_wall_type = owner_wall_data["type"]
+        owner_obj_id = owner_wall_data["id"]
+
+        if owner_wall_type == "group":
+            owner_group_data = call_api(method="groups.getById", params={"group_ids": owner_obj_id},
+                                        token=access_token)[0]
+            self.wall = "-{}".format(owner_group_data["id"])
+        else:
+            owner_profile_data = call_api(method="users.get", params={"user_ids": owner_obj_id,
+                                                                      "fields": "screen_name"},
+                                          token=access_token)[0]
+            self.wall = owner_profile_data["id"]
 
         # limit for posts
         if not posts_lim:
@@ -368,15 +391,9 @@ class Stats:
             did += 1
         return id_list_orig, result
 
-
-class PostsStats(Stats):
-    """
-    Gather, make and export statistics for posts
-    """
-
     def gather_stats(self):
         """
-        Gathering statistics for posts.
+        Gathering statistics [POSTS].
         :return: tuple with user's information and count of posts
         """
         plist = self.posts_list()
@@ -398,45 +415,35 @@ class PostsStats(Stats):
             from_list.append((posts_from_user, user))
         return from_list
 
-    def stats(self):
+    def stats(self, mode="posts"):
         """
-        Exporting statistics for posts
+        Exporting statistics.
+        :param mode: prefix for file
         """
-        posts_data = self.gather_stats()
-        posts_data_csv = posts_data.copy()
-        if not self.export == "csv":
-            log_write(_("Exporting to {}").format("TXT"))
-            res_txt = "posts_{}.txt".format(self.screen_name)
-            if res_txt in os.listdir("{}/results".format(scriptdir)):
-                os.remove("{}/results/{}".format(scriptdir, res_txt))
-            txt_file = open("{}/results/{}".format(scriptdir, res_txt), mode="a")
-            print(_("STATISTICS FOR POSTS"), file=txt_file)
-            while posts_data:
-                max_object = max(posts_data, key=_compare_by_first)
-                max_index = posts_data.index(max_object)
-                max_count = max_object[0]
-                user_data = posts_data.pop(max_index)[1]
-                user_string = "https://vk.com/{screen_name} ({first_name} {last_name}): {0}".format(max_count,
-                                                                                                    **user_data)
-                print(user_string, file=txt_file)
-        if not self.export == "txt":
-            log_write(_("Exporting to {}").format("CSV"))
-            res_csv = "posts_{}.csv".format(self.screen_name)
-            if res_csv in os.listdir("{}/results".format(scriptdir)):
-                os.remove("{}/results/{}".format(scriptdir, res_csv))
-            csv_file = open("{}/results/{}".format(scriptdir, res_csv), mode="w", newline="")
-            writer = csv.writer(csv_file)
-            rows = [["URL", _("Name"), _("Posts")]]
-            while posts_data_csv:
-                max_object = max(posts_data_csv, key=_compare_by_first)
-                max_index = posts_data_csv.index(max_object)
-                max_count = max_object[0]
-                user_data = max_object[1]
-                posts_data_csv.pop(max_index)
-                rows.append(["https://vk.com/{screen_name}".format(**user_data),
-                             "{first_name} {last_name}".format(**user_data),
-                             max_count])
-            writer.writerows(rows)
+        data = self.gather_stats()
+        res_txt = "{}_{}.txt".format(mode, self.screen_name)
+        res_csv = "{}_{}.txt".format(mode, self.screen_name)
+        log_write(_("Exporting to: {}/results/{} & csv").format(SCRIPTDIR, res_txt))
+        if res_txt in os.listdir("{}/results".format(SCRIPTDIR)):
+            os.remove("{}/results/{}".format(SCRIPTDIR, res_txt))
+        if res_csv in os.listdir("{}/results".format(SCRIPTDIR)):
+            os.remove("{}/results/{}".format(SCRIPTDIR, res_csv))
+        txt_file = open("{}/results/{}".format(SCRIPTDIR, res_txt), mode="a")
+        csv_file = open("{}/results/{}".format(SCRIPTDIR, res_csv), mode="w", newline="")
+        writer = csv.writer(csv_file)
+        rows = [["URL", _("Name"), _("Count")]]
+        print(_("STATISTICS FOR {}").format(mode.upper()), file=txt_file)
+        while data:
+            max_object = max(data, key=lambda sequence: sequence[0])
+            max_index = data.index(max_object)
+            max_count = max_object[0]
+            user_data = data.pop(max_index)[1]
+            user_string = "https://vk.com/{screen_name} ({first_name} {last_name}): {0}".format(max_count, **user_data)
+            print(user_string, file=txt_file)
+            rows.append(["https://vk.com/{screen_name}".format(**user_data),
+                         "{first_name} {last_name}".format(**user_data),
+                         max_count])
+        writer.writerows(rows)
 
 
 class LikedStats(Stats):
@@ -472,50 +479,12 @@ class LikedStats(Stats):
             result.append((likes, user))
         return result
 
-    def stats(self):
+    def stats(self, **kwargs):
         """
         Exporting statistics for likes
+        :param kwargs: for compatibility
         """
-        likes_data = self.gather_stats()
-        likes_data_csv = likes_data.copy()
-        if not self.export == "csv":
-            log_write(_("Exporting to {}").format("TXT"))
-            res_txt = "liked_{}.txt".format(self.screen_name)
-            if res_txt in os.listdir("{}/results".format(scriptdir)):
-                os.remove("{}/results/{}".format(scriptdir, res_txt))
-            txt_file = open("{}/results/{}".format(scriptdir, res_txt), mode="a")
-            print(_("STATISTICS FOR LIKES"), file=txt_file)
-            while likes_data:
-                max_object = max(likes_data, key=_compare_by_first)
-                max_count = max_object[0]
-                if max_count:
-                    max_index = likes_data.index(max_object)
-                    user_data = likes_data.pop(max_index)[1]
-                    user_string = "https://vk.com/{screen_name} ({first_name} {last_name}): {0}".format(max_count,
-                                                                                                        **user_data)
-                    print(user_string, file=txt_file)
-                else:
-                    break
-        if not self.export == "txt":
-            log_write(_("Exporting to {}").format("CSV"))
-            res_csv = "liked_{}.csv".format(self.screen_name)
-            if res_csv in os.listdir("{}/results".format(scriptdir)):
-                os.remove("{}/results/{}".format(scriptdir, res_csv))
-            csv_file = open("{}/results/{}".format(scriptdir, res_csv), mode="w", newline="")
-            writer = csv.writer(csv_file)
-            rows = [["URL", _("Name"), _("Likes")]]
-            while likes_data_csv:
-                max_object = max(likes_data_csv, key=_compare_by_first)
-                max_count = max_object[0]
-                if max_count:
-                    max_index = likes_data_csv.index(max_object)
-                    user_data = likes_data_csv.pop(max_index)[1]
-                    rows.append(["https://vk.com/{screen_name}".format(**user_data),
-                                 "{first_name} {last_name}".format(**user_data),
-                                 max_count])
-                else:
-                    break
-            writer.writerows(rows)
+        Stats.stats(self, mode="likes")
 
 
 class LikersStats(Stats):
@@ -550,45 +519,12 @@ class LikersStats(Stats):
             did += 1
         return result
 
-    def stats(self):
+    def stats(self, **kwargs):
         """
-        Exporting statistics for posts
+        Exporting statistics for likers
+        :param kwargs: for compatibility.
         """
-        likers_data = self.gather_stats()
-        likers_data_csv = likers_data.copy()
-        if not self.export == "csv":
-            log_write(_("Exporting to {}").format("TXT"))
-            res_txt = "likers_{}.txt".format(self.screen_name)
-            if res_txt in os.listdir("{}/results".format(scriptdir)):
-                os.remove("{}/results/{}".format(scriptdir, res_txt))
-            txt_file = open("{}/results/{}".format(scriptdir, res_txt), mode="a")
-            print(_("STATISTICS FOR LIKERS"), file=txt_file)
-            while likers_data:
-                max_object = max(likers_data, key=_compare_by_first)
-                max_index = likers_data.index(max_object)
-                max_count = max_object[0]
-                user_data = likers_data.pop(max_index)[1]
-                user_string = "https://vk.com/{screen_name} ({first_name} {last_name}): {0}".format(max_count,
-                                                                                                    **user_data)
-                print(user_string, file=txt_file)
-        if not self.export == "txt":
-            log_write(_("Exporting to {}").format("CSV"))
-            res_csv = "likers_{}.csv".format(self.screen_name)
-            if res_csv in os.listdir("{}/results".format(scriptdir)):
-                os.remove("{}/results/{}".format(scriptdir, res_csv))
-            csv_file = open("{}/results/{}".format(scriptdir, res_csv), mode="w", newline="")
-            writer = csv.writer(csv_file)
-            rows = [["URL", _("Name"), _("Likes")]]
-            while likers_data_csv:
-                max_object = max(likers_data_csv, key=_compare_by_first)
-                max_index = likers_data_csv.index(max_object)
-                max_count = max_object[0]
-                user_data = max_object[1]
-                likers_data_csv.pop(max_index)
-                rows.append(["https://vk.com/{screen_name}".format(**user_data),
-                             "{first_name} {last_name}".format(**user_data),
-                             max_count])
-            writer.writerows(rows)
+        Stats.stats(self, mode="likers")
 
 
 if __name__ == "__main__":
@@ -596,7 +532,7 @@ if __name__ == "__main__":
     if args["update"]:
         upd_check()
 
-    if "token.txt" not in os.listdir(scriptdir) or args["login"]:
+    if "token.txt" not in os.listdir(SCRIPTDIR) or args["login"]:
         access_token = login()
     else:
         access_token = open("token.txt").read()
@@ -610,27 +546,23 @@ if __name__ == "__main__":
 
     if wall_type == "group":
         group_data = call_api(method="groups.getById", params={"group_ids": obj_id}, token=access_token)[0]
-        wall = "-{}".format(group_data["id"])
         screen_name = group_data["screen_name"]
         title = group_data["name"]
     else:
         profile = call_api(method="users.get", params={"user_ids": obj_id, "fields": "screen_name"},
                            token=access_token)[0]
-        wall = profile["id"]
         screen_name = profile["screen_name"]
         title = "{first_name} {last_name}".format(**profile)
 
     log_write(_("STARTED GATHERING STATS FROM '{}'").format(title.upper()))
 
     if args["mode"] == "posts":
-        stats = PostsStats(wall, screen_name, token=access_token, posts_lim=args["posts"],
-                           date_lim=args["date"], export=args["export"])
+        stats = Stats(screen_name, token=access_token, posts_lim=args["posts"], date_lim=args["date"])
     elif args["mode"] == "liked":
-        stats = LikedStats(wall, screen_name, token=access_token, posts_lim=args["posts"],
-                           date_lim=args["date"], export=args["export"])
+        stats = LikedStats(screen_name, token=access_token, posts_lim=args["posts"], date_lim=args["date"])
     else:
-        stats = LikersStats(wall, screen_name, token=access_token, posts_lim=args["posts"],
-                            date_lim=args["date"], export=args["export"], wall_filter="all")
+        stats = LikersStats(screen_name, token=access_token, posts_lim=args["posts"],
+                            date_lim=args["date"], wall_filter="all")
 
     stats.stats()
 

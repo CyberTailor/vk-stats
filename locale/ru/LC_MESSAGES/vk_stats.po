@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SysRq VK Stats 0.5\n"
-"POT-Creation-Date: 2015-06-21 11:02+0500\n"
+"POT-Creation-Date: 2015-06-29 17:47+0500\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Matvey Vyalkov <cybertailor@gmail.com>\n"
 "Language-Team: \n"
@@ -16,57 +16,53 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SearchPath-0: /home/cyber/MEGA/Stats\n"
 
-#: /home/cyber/MEGA/Stats/stats.py:66
+#: /home/cyber/MEGA/Stats/stats.py:59
 msgid "Computing rating of activity in VK groups. [] = default values"
 msgstr ""
 "Вычисление рейтинга активности в группах ВКонтакте. [] = значения по "
 "умолчанию"
 
-#: /home/cyber/MEGA/Stats/stats.py:67
+#: /home/cyber/MEGA/Stats/stats.py:60
 msgid "smth where the program will gather stats"
 msgstr "что-нибудь, где программа будет собирать статистику"
 
-#: /home/cyber/MEGA/Stats/stats.py:71
+#: /home/cyber/MEGA/Stats/stats.py:64
 msgid "check for updates"
 msgstr "проверить наличие обновлений"
 
-#: /home/cyber/MEGA/Stats/stats.py:73
+#: /home/cyber/MEGA/Stats/stats.py:66
 msgid "specify a mode of stats [posts]"
 msgstr "выбрать режим сбора статистики [посты]"
 
-#: /home/cyber/MEGA/Stats/stats.py:75
-msgid "specify a type of export [CSV]"
-msgstr "выбрать тип экспорта [CSV]"
-
-#: /home/cyber/MEGA/Stats/stats.py:77
+#: /home/cyber/MEGA/Stats/stats.py:68
 msgid "get access to the VK"
 msgstr "получить доступ к ВКонтакте"
 
-#: /home/cyber/MEGA/Stats/stats.py:79
+#: /home/cyber/MEGA/Stats/stats.py:70
 msgid "set a number of posts to scan [all]"
 msgstr "задать количество постов для сканирования [все]"
 
-#: /home/cyber/MEGA/Stats/stats.py:81
+#: /home/cyber/MEGA/Stats/stats.py:72
 msgid "the earliest date of post in the yyyy/mm/dd format [0/0/0]"
 msgstr "дата самого раннего поста в формате гггг/мм/дд [0/0/0]"
 
-#: /home/cyber/MEGA/Stats/stats.py:90
+#: /home/cyber/MEGA/Stats/stats.py:99
 msgid "Creating a temporary directory..."
 msgstr "Создаю временную папку..."
 
-#: /home/cyber/MEGA/Stats/stats.py:93
+#: /home/cyber/MEGA/Stats/stats.py:102
 msgid "Downloading the new version..."
 msgstr "Скачиваю новую версию..."
 
-#: /home/cyber/MEGA/Stats/stats.py:97
+#: /home/cyber/MEGA/Stats/stats.py:106
 msgid "Unpacking an archive..."
 msgstr "Распаковываю архив..."
 
-#: /home/cyber/MEGA/Stats/stats.py:100
+#: /home/cyber/MEGA/Stats/stats.py:109
 msgid "Exiting..."
 msgstr "Завершаю работу приложения..."
 
-#: /home/cyber/MEGA/Stats/stats.py:112
+#: /home/cyber/MEGA/Stats/stats.py:121
 msgid ""
 "Found the update to version {}!\n"
 "\n"
@@ -76,7 +72,7 @@ msgstr ""
 "\n"
 "Список изменений:"
 
-#: /home/cyber/MEGA/Stats/stats.py:115
+#: /home/cyber/MEGA/Stats/stats.py:124
 msgid ""
 "\n"
 "Upgrade? (Y/n)"
@@ -84,15 +80,15 @@ msgstr ""
 "\n"
 "Обновиться? (Д/н)"
 
-#: /home/cyber/MEGA/Stats/stats.py:120
+#: /home/cyber/MEGA/Stats/stats.py:129
 msgid "Passing the update...\n"
 msgstr "В следующий раз обязательно обновись!\n"
 
-#: /home/cyber/MEGA/Stats/stats.py:122
+#: /home/cyber/MEGA/Stats/stats.py:131
 msgid "You running the latest version\n"
 msgstr "Вы используете последнюю версию\n"
 
-#: /home/cyber/MEGA/Stats/stats.py:130
+#: /home/cyber/MEGA/Stats/stats.py:139
 msgid ""
 "If you're afraid of losing the account, then:\n"
 "\t1) Go to http://vk.cc/3T1J9A\n"
@@ -106,94 +102,225 @@ msgstr ""
 "\t3) Скопируйте часть адресной строки, которая содержит access_token\n"
 "\t4) Создайте файл 'token.txt' и запишите в него ваш access_token"
 
-#: /home/cyber/MEGA/Stats/stats.py:135
+#: /home/cyber/MEGA/Stats/stats.py:144
 msgid "Your login: "
 msgstr "Ваш логин: "
 
-#: /home/cyber/MEGA/Stats/stats.py:136
+#: /home/cyber/MEGA/Stats/stats.py:145
 msgid "Your password: "
 msgstr "Ваш пароль: "
 
-#: /home/cyber/MEGA/Stats/stats.py:163
+#: /home/cyber/MEGA/Stats/stats.py:172
 msgid "Error: {}. Waiting for 10 seconds..."
 msgstr "Ошибка: {}. Жду 10 секунд и молюсь..."
 
-#: /home/cyber/MEGA/Stats/stats.py:205
+#: /home/cyber/MEGA/Stats/stats.py:226
 msgid "limited to {} posts"
 msgstr "ограничено до {} постов"
 
-#: /home/cyber/MEGA/Stats/stats.py:210
+#: /home/cyber/MEGA/Stats/stats.py:231
 msgid "Incorrect date!"
 msgstr "Неправильная дата!"
 
-#: /home/cyber/MEGA/Stats/stats.py:216
+#: /home/cyber/MEGA/Stats/stats.py:237
 msgid "limited to {} date"
 msgstr "ограничено до даты {}"
 
-#: /home/cyber/MEGA/Stats/stats.py:222
+#: /home/cyber/MEGA/Stats/stats.py:243
 msgid "Reached the limit for date."
 msgstr "Достигнуто ограничение по дате."
 
-#: /home/cyber/MEGA/Stats/stats.py:255 /home/cyber/MEGA/Stats/stats.py:264
+#: /home/cyber/MEGA/Stats/stats.py:276 /home/cyber/MEGA/Stats/stats.py:286
 msgid "Getting posts: {}%"
 msgstr "Получение списка постов: {}%"
 
-#: /home/cyber/MEGA/Stats/stats.py:287
+#: /home/cyber/MEGA/Stats/stats.py:309
 msgid "Processing posts: {}%"
 msgstr "Обработка постов: {}%"
 
-#: /home/cyber/MEGA/Stats/stats.py:308
+#: /home/cyber/MEGA/Stats/stats.py:330
 msgid "Getting list of users: {}%"
 msgstr "Получение списка пользователей: {}%"
 
-#: /home/cyber/MEGA/Stats/stats.py:336 /home/cyber/MEGA/Stats/stats.py:348
-#: /home/cyber/MEGA/Stats/stats.py:361
+#: /home/cyber/MEGA/Stats/stats.py:358 /home/cyber/MEGA/Stats/stats.py:370
+#: /home/cyber/MEGA/Stats/stats.py:383
 msgid "Getting likers: {}%"
 msgstr "Получение списка лайкеров: {}%"
 
-#: /home/cyber/MEGA/Stats/stats.py:396 /home/cyber/MEGA/Stats/stats.py:470
-#: /home/cyber/MEGA/Stats/stats.py:547
+#: /home/cyber/MEGA/Stats/stats.py:412 /home/cyber/MEGA/Stats/stats.py:476
+#: /home/cyber/MEGA/Stats/stats.py:515
 msgid "Processing user: {}%"
 msgstr "Обработка пользователей: {}%"
 
-#: /home/cyber/MEGA/Stats/stats.py:407 /home/cyber/MEGA/Stats/stats.py:422
-#: /home/cyber/MEGA/Stats/stats.py:481 /home/cyber/MEGA/Stats/stats.py:499
-#: /home/cyber/MEGA/Stats/stats.py:559 /home/cyber/MEGA/Stats/stats.py:574
-msgid "Exporting to {}"
-msgstr "Экспорт в {}"
+#: /home/cyber/MEGA/Stats/stats.py:424
+msgid "Exporting to: {}/results/{} & csv"
+msgstr "Экспорт в: {}/results/{} и csv"
 
-#: /home/cyber/MEGA/Stats/stats.py:412
-msgid "STATISTICS FOR POSTS"
-msgstr "СТАТИСТИКА ПО ПОСТАМ"
-
-#: /home/cyber/MEGA/Stats/stats.py:428 /home/cyber/MEGA/Stats/stats.py:505
-#: /home/cyber/MEGA/Stats/stats.py:580
+#: /home/cyber/MEGA/Stats/stats.py:432
 msgid "Name"
 msgstr "Имя"
 
-#: /home/cyber/MEGA/Stats/stats.py:428
-msgid "Posts"
-msgstr "Посты"
+#: /home/cyber/MEGA/Stats/stats.py:432
+msgid "Count"
+msgstr "Количество"
 
-#: /home/cyber/MEGA/Stats/stats.py:486
-msgid "STATISTICS FOR LIKES"
-msgstr "СТАТИСТИКА ПО ЛАЙКАМ"
+#: /home/cyber/MEGA/Stats/stats.py:433
+msgid "STATISTICS FOR {}"
+msgstr "СТАТИСТИКА ПО {}"
 
-#: /home/cyber/MEGA/Stats/stats.py:505 /home/cyber/MEGA/Stats/stats.py:580
-msgid "Likes"
-msgstr "Лайки"
-
-#: /home/cyber/MEGA/Stats/stats.py:564
-msgid "STATISTICS FOR LIKERS"
-msgstr "СТАТИСТИКА ПО ЛАЙКЕРАМ"
-
-#: /home/cyber/MEGA/Stats/stats.py:622
+#: /home/cyber/MEGA/Stats/stats.py:555
 msgid "STARTED GATHERING STATS FROM '{}'"
 msgstr "НАЧАТ СБОР СТАТИСТИКИ С '{}'"
 
-#: /home/cyber/MEGA/Stats/stats.py:636
+#: /home/cyber/MEGA/Stats/stats.py:567
 msgid "SUCCESSFUL!"
 msgstr "УСПЕШНО!"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:134
+msgid " Login:"
+msgstr "Логин:"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:148
+msgid " Password:"
+msgstr "Пароль:"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:333
+#: /home/cyber/MEGA/Stats/vk_stats.glade:596
+msgid "Account"
+msgstr "Аккаунт"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:519
+msgid "All"
+msgstr "Всё"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:84
+msgid "Authorization"
+msgstr "Авторизация"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:682
+msgid "Computing rating of activity in VK walls."
+msgstr "Вычисление рейтинга активности в группах ВКонтакте."
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:483
+msgid "Date:"
+msgstr "Дата:"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:326
+msgid "Edit"
+msgstr "Правка"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:452
+msgid "Export:"
+msgstr "Экспорт:"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:303
+msgid "File"
+msgstr "Файл"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:12
+msgid "Found update!"
+msgstr "Найдено обновление!"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:566
+msgid "Go!"
+msgstr "Поехали!"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:349
+msgid "Help"
+msgstr "Справка"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:500
+msgid "Liked"
+msgstr "Лайки"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:501
+msgid "Likers"
+msgstr "Лайкеры"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:173
+msgid "Log in"
+msgstr "Войти"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:437
+msgid "Mode:"
+msgstr "Режим:"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:499
+msgid "Posts"
+msgstr "Посты"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:467
+msgid "Posts:"
+msgstr "Посты:"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:214
+#: /home/cyber/MEGA/Stats/vk_stats.glade:249
+msgid "Processing..."
+msgstr "Обработка..."
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:633
+msgid "Re-login"
+msgstr "Перезайти"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:239
+msgid "Started gathering statistics"
+msgstr "Начат сбор сатистики"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:284
+msgid "SysRq VK Stats"
+msgstr "SysRq VK Stats"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:13
+msgid "To version: {}. Upgrade?"
+msgstr "До версии: {}. Обновиться?"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:53
+msgid "Updates not found"
+msgstr "Обновлений не найдено!"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:684
+msgid "VKontakte group"
+msgstr "Группа ВКонтакте"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:611
+msgid "You logged in as {}.\n"
+msgstr "Вы авторизованы как {}.\n"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:54
+msgid "You running the latest version."
+msgstr "Вы используете последнюю версию."
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:533
+msgid "all by default"
+msgstr "все по умолчанию"
+
+#: /home/cyber/MEGA/Stats/vk_stats.glade:547
+msgid "yyyy/mm/dd"
+msgstr "гггг/мм/дд"
+
+#~ msgid "Login"
+#~ msgstr "Логин"
+
+#~ msgid "0 = all"
+#~ msgstr "0 = всё"
+
+#~ msgid " Posts:\t"
+#~ msgstr " Посты:\t"
+
+#~ msgid "specify a type of export [CSV]"
+#~ msgstr "выбрать тип экспорта [CSV]"
+
+#~ msgid "STATISTICS FOR POSTS"
+#~ msgstr "СТАТИСТИКА ПО ПОСТАМ"
+
+#~ msgid "STATISTICS FOR LIKES"
+#~ msgstr "СТАТИСТИКА ПО ЛАЙКАМ"
+
+#~ msgid "Likes"
+#~ msgstr "Лайки"
+
+#~ msgid "STATISTICS FOR LIKERS"
+#~ msgstr "СТАТИСТИКА ПО ЛАЙКЕРАМ"
 
 #~ msgid "select a type of the wall [group]"
 #~ msgstr "выбрать тип стены [группа]"
@@ -245,9 +372,6 @@ msgstr "УСПЕШНО!"
 #~ "\tлайки: {}\n"
 #~ "\tURL: https://vk.com/{screen_name}\n"
 #~ "\tимя: {first_name} {last_name}"
-
-#~ msgid "STATISTICS MODE: {}"
-#~ msgstr "РЕЖИМ СТАТИСТИКИ: {}"
 
 #~ msgid ""
 #~ "[{}%] post https://vk.com/wall{}_{} :\n"
