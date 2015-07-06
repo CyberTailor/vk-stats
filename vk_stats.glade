@@ -2,8 +2,41 @@
 <!-- Generated with glade 3.16.1 -->
 <interface domain="vk_stats">
   <requires lib="gtk+" version="3.10"/>
+  <object class="GtkMessageDialog" id="Error">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Error</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-always</property>
+    <property name="icon_name">sysrq_stats</property>
+    <property name="type_hint">dialog</property>
+    <property name="message_type">error</property>
+    <property name="buttons">ok</property>
+    <property name="text" translatable="yes">Error</property>
+    <signal name="close" handler="error_destroy" swapped="no"/>
+    <signal name="response" handler="error_destroy" swapped="no"/>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="ErrorContainer">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="ErrorButtons">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkMessageDialog" id="FoundUpdate">
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Update</property>
     <property name="window_position">center-always</property>
     <property name="icon_name">sysrq_stats</property>
     <property name="type_hint">dialog</property>
@@ -15,17 +48,17 @@
     <signal name="destroy" handler="update_destroy" swapped="no"/>
     <signal name="response" handler="apply_update" swapped="no"/>
     <child internal-child="vbox">
-      <object class="GtkBox" id="messagedialog-vbox1">
+      <object class="GtkBox" id="Container">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox" id="messagedialog-action_area1">
+          <object class="GtkButtonBox" id="Buttons">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
@@ -41,6 +74,7 @@
   </object>
   <object class="GtkMessageDialog" id="LatestVersion">
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Update</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-always</property>
@@ -56,17 +90,17 @@
     <signal name="destroy" handler="latest_destroy" swapped="no"/>
     <signal name="response" handler="latest_destroy" swapped="no"/>
     <child internal-child="vbox">
-      <object class="GtkBox" id="messagedialog-vbox">
+      <object class="GtkBox" id="MsgContainer">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox" id="messagedialog-action_area">
+          <object class="GtkButtonBox" id="OK">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
           </packing>
@@ -82,7 +116,6 @@
   <object class="GtkWindow" id="AccountLogin">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Authorization</property>
-    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-always</property>
     <property name="icon_name">sysrq_stats</property>
@@ -159,7 +192,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="padding">1</property>
             <property name="position">0</property>
@@ -211,70 +244,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkWindow" id="Process">
-    <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Processing...</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="default_width">500</property>
-    <property name="icon_name">sysrq_stats</property>
-    <signal name="destroy" handler="process_destroy" swapped="no"/>
-    <child>
-      <object class="GtkBox" id="LogContainer">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkFrame" id="Log">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label_xalign">0</property>
-            <property name="shadow_type">in</property>
-            <child>
-              <object class="GtkAlignment" id="alignment1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="left_padding">12</property>
-                <child>
-                  <object class="GtkLabel" id="LogText">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Started gathering statistics</property>
-                    <property name="selectable">True</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child type="label">
-              <object class="GtkLabel" id="ProcessingText">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Processing...</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="padding">3</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLevelBar" id="ProgressBar">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="max_value">100</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="padding">10</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkImage" id="PropertiesImage">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -284,8 +253,7 @@
   <object class="GtkWindow" id="StatsMain">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">SysRq VK Stats</property>
-    <property name="resizable">False</property>
-    <property name="window_position">center</property>
+    <property name="window_position">center-always</property>
     <property name="icon_name">sysrq_stats</property>
     <property name="has_resize_grip">False</property>
     <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
@@ -390,54 +358,17 @@
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkBox" id="GroupContainer">
+              <object class="GtkGrid" id="SettingsGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkLabel" id="Group">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="xpad">1</property>
                     <property name="label">https://vk.com/</property>
                     <property name="justify">right</property>
                     <property name="ellipsize">end</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="padding">3</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="GroupEntry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">3</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkGrid" id="grid2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkLabel" id="Mode">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="xpad">3</property>
-                    <property name="label" translatable="yes">Mode:</property>
-                    <property name="justify">right</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -447,15 +378,45 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="Export">
+                  <object class="GtkEntry" id="GroupEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="Mode">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="xpad">3</property>
-                    <property name="label" translatable="yes">Export:</property>
+                    <property name="label" translatable="yes">Mode:</property>
                     <property name="justify">right</property>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
+                    <property name="top_attach">0</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="ModeSelect">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="active">0</property>
+                    <items>
+                      <item id="0" translatable="yes">Posts</item>
+                      <item id="1" translatable="yes">Likes</item>
+                      <item id="2" translatable="yes">Likers</item>
+                    </items>
+                  </object>
+                  <packing>
+                    <property name="left_attach">3</property>
                     <property name="top_attach">0</property>
                     <property name="width">1</property>
                     <property name="height">1</property>
@@ -493,42 +454,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBoxText" id="ModeSelect">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="active">0</property>
-                    <items>
-                      <item id="0" translatable="yes">Posts</item>
-                      <item id="1" translatable="yes">Liked</item>
-                      <item id="2" translatable="yes">Likers</item>
-                    </items>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="ExportSelect">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="active">0</property>
-                    <items>
-                      <item id="0">CSV</item>
-                      <item id="1">TXT</item>
-                      <item id="2" translatable="yes">All</item>
-                    </items>
-                  </object>
-                  <packing>
-                    <property name="left_attach">3</property>
-                    <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkEntry" id="PostsEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -559,7 +484,6 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="padding">3</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -569,18 +493,18 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="start" object="StartContainer" swapped="no"/>
+                <signal name="clicked" handler="start" object="SettingsGrid" swapped="no"/>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="padding">3</property>
                 <property name="position">3</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
@@ -596,7 +520,6 @@
   <object class="GtkWindow" id="AccountLogged">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Account</property>
-    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-always</property>
     <property name="icon_name">sysrq_stats</property>
@@ -624,7 +547,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
@@ -644,7 +567,7 @@
                 <signal name="clicked" handler="login" swapped="no"/>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
@@ -659,7 +582,7 @@
                 <signal name="clicked" handler="logged_destroy" swapped="no"/>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
@@ -667,7 +590,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="fill">True</property>
             <property name="padding">3</property>
             <property name="position">1</property>
           </packing>
@@ -678,13 +601,12 @@
   <object class="GtkAboutDialog" id="StatsAbout">
     <property name="can_focus">False</property>
     <property name="title">SysRq VK Stats</property>
-    <property name="resizable">False</property>
-    <property name="window_position">center-on-parent</property>
+    <property name="window_position">center-always</property>
     <property name="icon_name">sysrq_stats</property>
     <property name="type_hint">dialog</property>
     <property name="has_resize_grip">False</property>
     <property name="program_name">SysRq VK Stats</property>
-    <property name="version">1.0</property>
+    <property name="version">0.9 "Bad Luck Brian"</property>
     <property name="copyright">Matvey Vyalkov, 2015</property>
     <property name="comments" translatable="yes">Computing rating of activity in VK walls.</property>
     <property name="website">https://vk.com/sysrqtech</property>
@@ -909,7 +831,7 @@
             <property name="layout_style">end</property>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
@@ -917,6 +839,37 @@
         </child>
         <child>
           <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkMessageDialog" id="Successfully">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">All the OK</property>
+    <property name="window_position">center-always</property>
+    <property name="icon_name">sysrq_stats</property>
+    <property name="type_hint">dialog</property>
+    <property name="buttons">ok</property>
+    <property name="text" translatable="yes">Successfully!</property>
+    <property name="secondary_text" translatable="yes">See files in "results" directory.</property>
+    <signal name="close" handler="success_destroy" swapped="no"/>
+    <signal name="response" handler="success_destroy" swapped="no"/>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="SuccessContainer">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="SuccessButtons">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
         </child>
       </object>
     </child>
