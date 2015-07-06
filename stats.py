@@ -19,8 +19,8 @@
 Computing rating of activity in VKontakte groups.
 """
 __author__ = "CyberTailor <cybertailor@gmail.com>"
-__version__ = '0.6 "Alien Guy"'
-v_number = 2
+__version__ = '0.9 "Bad Luck Brian"'
+v_number = 3
 api_ver = "5.34"
 
 import os
@@ -44,6 +44,10 @@ from libs.gettext_windows import gettext_windows
 
 console = True
 SCRIPTDIR = os.path.abspath(os.path.dirname(__file__))  # directory with this script
+HOME = os.path.expanduser("~")
+CURDIR = os.getcwd()
+if "results" not in os.listdir(CURDIR):
+    os.mkdir("{}/results".format(CURDIR))
 LOCALE_DIR = "{}/locale".format(SCRIPTDIR)
 APP = "vk_stats"
 # translating strings in _()
@@ -75,12 +79,16 @@ def parse_cmd_args():
     return vars(parser.parse_args())
 
 
-def no_console():
+def no_console(error_func, success):
     """
     Preparing the program for GUI.
+    :param success: window which will shown when all successfully
+    :param error_func: error window which is supporting primary/secondary text formatting
     """
-    global console
+    global console, error, success_win
     console = False
+    error = error_func
+    success_win = success
 
 
 def log_write(message, *, to=sys.stdout):
@@ -107,7 +115,15 @@ def upgrade(version):
                         filename=archive_file)
     log_write(_("Unpacking an archive..."))
     archive = zipfile.ZipFile(archive_file)
-    archive.extractall(path=SCRIPTDIR)  # extract ZIP to script directory
+    try:
+        archive.extractall(path=SCRIPTDIR)  # extract ZIP to script directory
+    except PermissionError:
+        if console:
+            print(_("Please, upgrade the program using package manager or installer"))
+            exit()
+        else:
+            error(primary=_("Can't upgrade"),
+                  secondary=_("Please, upgrade the program using package manager or installer"))
     log_write(_("Exiting..."))
     exit()
 
@@ -120,17 +136,21 @@ def upd_check():
         "http://net2ftp.ru/node0/CyberTailor@gmail.com/versions.json").read().decode("utf-8")
     latest = json.loads(latest_file)["vk_stats"]
     if latest["number"] > v_number:
-        log_write(_("Found the update to version {}!\n\nChangelog:").format(latest["version"]))
-        print(request.urlopen(
-            "http://net2ftp.ru/node0/CyberTailor@gmail.com/vk_stats.CHANGELOG").read().decode("utf-8"))
-        choice = input(_("\nUpgrade? (Y/n)")).lower()
-        update_prompt = {"n": False, "not": False, "н": False, "нет": False}.get(choice, True)
-        if update_prompt:
-            upgrade(version=latest["version"])
+        if console:
+            log_write(_("Found the update to version {}!\n\nChangelog:").format(latest["version"]))
+            print(request.urlopen(
+                "http://net2ftp.ru/node0/CyberTailor@gmail.com/vk_stats.CHANGELOG").read().decode("utf-8"))
+            choice = input(_("\nUpgrade? (Y/n)")).lower()
+            update_prompt = {"n": False, "not": False, "н": False, "нет": False}.get(choice, True)
+            if update_prompt:
+                upgrade(version=latest["version"])
+            else:
+                log_write(_("Passing the update...\n"))
         else:
-            log_write(_("Passing the update...\n"))
+            return latest["version"]
     else:
-        log_write(_("You running the latest version\n"))
+        if console:
+            log_write(_("You running the latest version\n"))
 
 
 def login():
@@ -142,12 +162,12 @@ def login():
             "\t1) Go to http://vk.cc/3T1J9A\n" +
             "\t2) Login and give permissions to app\n" +
             "\t3) Copy part of an urlbar, which is containing the access_token\n" +
-            "\t4) Create a file 'token.txt' and write to one your access token"))
+            "\t4) Create a file 'token.txt' in home directory and write to one your access token"))
     email = input(_("Your login: "))
     password = getpass(_("Your password: "))
     app_id = 4589594
     token = auth(email, password, app_id, ["stats", "groups", "wall"])[0]
-    token_file = open("{}/token.txt".format(SCRIPTDIR), mode="w")
+    token_file = open("{}/token.txt".format(HOME), mode="w")
     token_file.write(token)
     return token
 
@@ -175,10 +195,10 @@ def call_api(method, *, token, params):
             time.sleep(10)
     if "error" in result:
         if console:
-            log_write("VK API: {}".format(result["error"]["error_msg"]), to=sys.stderr)
+            log_write("VK API {error_code}: {error_msg}".format(**result["error"]), to=sys.stderr)
             exit()
         else:
-            return "VK API: {}".format(result["error"]["error_msg"])
+            error(primary="VK API {error_code}".format(**result["error"]), secondary=result["error"]["error_msg"])
     time.sleep(0.33)
     return result["response"]
 
@@ -198,25 +218,25 @@ class Stats:
     Gathering statistics
     """
 
-    def __init__(self, owner_screen_name, *, token, posts_lim=0, date_lim="0/0/0", wall_filter="others"):
+    def __init__(self, name, *, token, posts_lim=0, date_lim="0/0/0", wall_filter="others"):
         self.token = token
-        self.screen_name = owner_screen_name
+        self.screen_name = name
         self.filter = wall_filter
 
         # ID of a wall
         owner_wall_data = call_api("utils.resolveScreenName", params={"screen_name": self.screen_name},
-                                   token=access_token)
+                                   token=self.token)
         owner_wall_type = owner_wall_data["type"]
-        owner_obj_id = owner_wall_data["id"]
+        owner_obj_id = owner_wall_data["object_id"]
 
         if owner_wall_type == "group":
             owner_group_data = call_api(method="groups.getById", params={"group_ids": owner_obj_id},
-                                        token=access_token)[0]
+                                        token=self.token)[0]
             self.wall = "-{}".format(owner_group_data["id"])
         else:
             owner_profile_data = call_api(method="users.get", params={"user_ids": owner_obj_id,
                                                                       "fields": "screen_name"},
-                                          token=access_token)[0]
+                                          token=self.token)[0]
             self.wall = owner_profile_data["id"]
 
         # limit for posts
@@ -225,7 +245,7 @@ class Stats:
                                                           "filter": self.filter}, token=self.token)["count"] - 1
         else:
             self.posts_lim = posts_lim
-        log_write(_("limited to {} posts").format(self.posts_lim))
+        log_write(_("Limited to {} posts").format(self.posts_lim))
 
         # date limit
         date_list = date_lim.split("/")
@@ -236,7 +256,7 @@ class Stats:
             self.date_lim = None
         else:
             self.date_lim = time.mktime((int(date_list[0]), int(date_list[1]), int(date_list[2]), 0, 0, 0, 0, 0, 0))
-            log_write(_("limited to {} date").format(date_lim))
+            log_write(_("Limited to {} date").format(date_lim))
 
     def _check_limit(self, data):
         if self.date_lim:
@@ -422,14 +442,14 @@ class Stats:
         """
         data = self.gather_stats()
         res_txt = "{}_{}.txt".format(mode, self.screen_name)
-        res_csv = "{}_{}.txt".format(mode, self.screen_name)
-        log_write(_("Exporting to: {}/results/{} & csv").format(SCRIPTDIR, res_txt))
-        if res_txt in os.listdir("{}/results".format(SCRIPTDIR)):
-            os.remove("{}/results/{}".format(SCRIPTDIR, res_txt))
-        if res_csv in os.listdir("{}/results".format(SCRIPTDIR)):
-            os.remove("{}/results/{}".format(SCRIPTDIR, res_csv))
-        txt_file = open("{}/results/{}".format(SCRIPTDIR, res_txt), mode="a")
-        csv_file = open("{}/results/{}".format(SCRIPTDIR, res_csv), mode="w", newline="")
+        res_csv = "{}_{}.csv".format(mode, self.screen_name)
+        log_write(_("Exporting to: {}/results/{} & csv").format(CURDIR, res_txt))
+        if res_txt in os.listdir("{}/results".format(CURDIR)):
+            os.remove("{}/results/{}".format(CURDIR, res_txt))
+        if res_csv in os.listdir("{}/results".format(CURDIR)):
+            os.remove("{}/results/{}".format(CURDIR, res_csv))
+        txt_file = open("{}/results/{}".format(CURDIR, res_txt), mode="a")
+        csv_file = open("{}/results/{}".format(CURDIR, res_csv), mode="w", newline="")
         writer = csv.writer(csv_file)
         rows = [["URL", _("Name"), _("Count")]]
         print(_("STATISTICS FOR {}").format(mode.upper()), file=txt_file)
@@ -444,6 +464,7 @@ class Stats:
                          "{first_name} {last_name}".format(**user_data),
                          max_count])
         writer.writerows(rows)
+        success_win.show_all()
 
 
 class LikedStats(Stats):
@@ -532,10 +553,10 @@ if __name__ == "__main__":
     if args["update"]:
         upd_check()
 
-    if "token.txt" not in os.listdir(SCRIPTDIR) or args["login"]:
+    if "token.txt" not in os.listdir(HOME) or args["login"]:
         access_token = login()
     else:
-        access_token = open("token.txt").read()
+        access_token = open("{}/token.txt".format(HOME)).read()
 
     call_api(method="stats.trackVisitor", params={}, token=access_token)  # needed for stats gathering
 
